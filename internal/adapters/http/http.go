@@ -3,6 +3,7 @@ package http
 import (
 	"fmt"
 	"github.com/aknEvrnky/notification-system/internal/ports"
+	"github.com/aknEvrnky/notification-system/pkg/config"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"time"
@@ -14,16 +15,16 @@ type Adapter struct {
 	fiberApp *fiber.App
 }
 
-func NewAdapter(api ports.ApiPort, httpPort int) *Adapter {
+func NewAdapter(api ports.ApiPort, cfg *config.Config) *Adapter {
 	fiberApp := newFiberApp()
 
 	a := &Adapter{
 		api:      api,
-		httpPort: httpPort,
+		httpPort: cfg.ApplicationPort,
 		fiberApp: fiberApp,
 	}
 
-	a.registerRoutes()
+	a.registerRoutes(cfg.BasicAuthUsername, cfg.BasicAuthPassword)
 
 	return a
 }
