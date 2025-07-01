@@ -1,6 +1,7 @@
 package config
 
 import (
+	"go.uber.org/zap"
 	"os"
 	"strconv"
 )
@@ -10,7 +11,11 @@ type Config struct {
 	BasicAuthUsername string
 	BasicAuthPassword string
 
-	MailDriver string
+	MailDriver   string
+	MailUser     string
+	MailPassword string
+	MailHost     string
+	MailPort     int
 
 	SmsDriver string
 
@@ -18,16 +23,27 @@ type Config struct {
 }
 
 func NewConfig() *Config {
-	port, err := strconv.Atoi(os.Getenv("APPLICATION_PORT"))
+	appPort, err := strconv.Atoi(os.Getenv("APPLICATION_PORT"))
 	if err != nil {
-		panic("Invalid APPLICATION_PORT value: " + os.Getenv("APPLICATION_PORT"))
+		zap.L().Error("Invalid APPLICATION_PORT value, using default 8080", zap.Error(err))
+		appPort = 8080 // Default application port
+	}
+
+	smtpPort, err := strconv.Atoi(os.Getenv("MAIL_PORT"))
+	if err != nil {
+		zap.L().Error("Invalid MAIL_PORT value, using default 587", zap.Error(err))
+		smtpPort = 587 // Default SMTP port
 	}
 
 	return &Config{
-		ApplicationPort:   port,
+		ApplicationPort:   appPort,
 		BasicAuthUsername: os.Getenv("BASIC_AUTH_USERNAME"),
 		BasicAuthPassword: os.Getenv("BASIC_AUTH_PASSWORD"),
 		MailDriver:        os.Getenv("MAIL_DRIVER"),
+		MailUser:          os.Getenv("MAIL_USER"),
+		MailPassword:      os.Getenv("MAIL_PASSWORD"),
+		MailHost:          os.Getenv("MAIL_HOST"),
+		MailPort:          smtpPort,
 		SmsDriver:         os.Getenv("SMS_DRIVER"),
 		PushDriver:        os.Getenv("PUSH_DRIVER"),
 	}
