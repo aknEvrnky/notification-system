@@ -13,7 +13,12 @@ func (a *Adapter) TriggerNotificationHandler(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	eventType := payload["event_type"].(string)
+	eventType, ok := payload["event_type"]
+	if !ok {
+		return fiber.NewError(fiber.StatusBadRequest, "event_type is required")
+	}
+
+	eventTypeStr, ok := eventType.(string)
 
 	if eventType == "" {
 		return fiber.NewError(fiber.StatusBadRequest, "event_type is required")
@@ -21,5 +26,5 @@ func (a *Adapter) TriggerNotificationHandler(ctx *fiber.Ctx) error {
 
 	ctx.Send([]byte("Notification triggered successfully"))
 
-	return a.api.TriggerNotification(ctx.Context(), eventType, payload)
+	return a.api.TriggerNotification(ctx.Context(), eventTypeStr, payload)
 }
