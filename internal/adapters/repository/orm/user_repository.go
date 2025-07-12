@@ -48,3 +48,40 @@ func (u *UserRepository) FindById(ctx context.Context, userId string) (domain.Us
 		DeviceToken: usr.DeviceToken,
 	}, nil
 }
+
+func (u *UserRepository) Create(ctx context.Context, usr domain.User) error {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	record := user{
+		ID:          usr.Id,
+		Name:        usr.Name,
+		Email:       usr.Email,
+		Phone:       usr.Phone,
+		DeviceToken: usr.DeviceToken,
+	}
+
+	return u.db.WithContext(ctx).Create(&record).Error
+}
+
+func (u *UserRepository) Update(ctx context.Context, usr domain.User) error {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	record := user{
+		ID:          usr.Id,
+		Name:        usr.Name,
+		Email:       usr.Email,
+		Phone:       usr.Phone,
+		DeviceToken: usr.DeviceToken,
+	}
+
+	return u.db.WithContext(ctx).Model(&user{}).Where("id = ?", usr.Id).Updates(record).Error
+}
+
+func (u *UserRepository) Delete(ctx context.Context, userId string) error {
+	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
+	defer cancel()
+
+	return u.db.WithContext(ctx).Where("id = ?", userId).Delete(&user{}).Error
+}

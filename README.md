@@ -46,6 +46,7 @@ Domain modelleri (`domain` paketi) yalnizca gerekli alanlari barindirir ve dis k
    go run ./cmd/api
    ```
 3. HTTP servisi varsayilan olarak Fiber uzerinde belirttiginiz portta calisir ve `/api/notifications/trigger` rotasi ile bildirim tetikler.
+4. Kullanici islemleri icin `/api/users` (POST), `/api/users/:id` (PUT, DELETE) rotalari kullanilabilir.
 
 ## Sonuc
 

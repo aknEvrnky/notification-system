@@ -13,6 +13,11 @@ func (a *Adapter) registerRoutes(authUser string, authPassword string) {
 		},
 	}))
 
-	// Register your routes here
+	// Notification routes
 	api.Post("/notifications/trigger", a.TriggerNotificationHandler)
+
+	// User management routes
+	api.Post("/users", a.CreateUserHandler)
+	api.Put("/users/:id", a.UpdateUserHandler)
+	api.Delete("/users/:id", a.DeleteUserHandler)
 }
