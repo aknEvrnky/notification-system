@@ -11,10 +11,10 @@ import (
 type user struct {
 	gorm.Model
 	ID          string `gorm:"primarykey"`
-	name        string
-	email       string
-	phone       string
-	deviceToken string
+	Name        string
+	Email       string
+	Phone       string
+	DeviceToken string
 }
 
 type UserRepository struct {
@@ -42,9 +42,9 @@ func (u *UserRepository) FindById(ctx context.Context, userId string) (domain.Us
 
 	return domain.User{
 		Id:          usr.ID,
-		Name:        usr.name,
-		Email:       usr.email,
-		Phone:       usr.phone,
-		DeviceToken: usr.deviceToken,
+		Name:        usr.Name,
+		Email:       usr.Email,
+		Phone:       usr.Phone,
+		DeviceToken: usr.DeviceToken,
 	}, nil
 }
