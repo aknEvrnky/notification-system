@@ -20,6 +20,8 @@ type Config struct {
 	SmsDriver string
 
 	PushDriver string
+
+	Dsn string
 }
 
 func NewConfig() *Config {
@@ -46,5 +48,6 @@ func NewConfig() *Config {
 		MailPort:          smtpPort,
 		SmsDriver:         os.Getenv("SMS_DRIVER"),
 		PushDriver:        os.Getenv("PUSH_DRIVER"),
+		Dsn:               os.Getenv("DSN"),
 	}
 }

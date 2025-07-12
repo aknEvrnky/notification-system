@@ -14,4 +14,5 @@ func (a *Adapter) registerRoutes(authUser string, authPassword string) {
 	}))
 
 	// Register your routes here
+	api.Post("/notifications/trigger", a.TriggerNotificationHandler)
 }

@@ -3,11 +3,14 @@ package main
 import (
 	"github.com/aknEvrnky/notification-system/internal/adapters/factory"
 	"github.com/aknEvrnky/notification-system/internal/adapters/http"
+	"github.com/aknEvrnky/notification-system/internal/adapters/repository/orm"
 	"github.com/aknEvrnky/notification-system/internal/application/core/api"
 	"github.com/aknEvrnky/notification-system/pkg/config"
 	_ "github.com/aknEvrnky/notification-system/pkg/logger"
 	_ "github.com/joho/godotenv/autoload"
 	"go.uber.org/zap"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 	"os"
 	"os/signal"
 	"syscall"
@@ -34,7 +37,18 @@ func main() {
 		zap.L().Fatal("Failed to create push port", zap.Error(err))
 	}
 
-	application := api.NewApplication(cfg, mailer, sms, pusher)
+	// create db instance
+	db, err := gorm.Open(mysql.Open(cfg.Dsn), &gorm.Config{})
+
+	if err != nil {
+		zap.L().Fatal("Failed to connect to database", zap.Error(err))
+	}
+	zap.L().Info("Database connection established", zap.String("dsn", cfg.Dsn))
+
+	// create repositories
+	userRepository := orm.NewUserRepository(db)
+
+	application := api.NewApplication(cfg, mailer, sms, pusher, userRepository)
 	zap.L().Info("Application initialized")
 
 	httpAdapter := http.NewAdapter(application, cfg)
