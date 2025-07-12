@@ -10,16 +10,22 @@ func (a *Adapter) TriggerNotificationHandler(ctx *fiber.Ctx) error {
 	payload := make(map[string]any)
 
 	if err := json.Unmarshal(ctx.Body(), &payload); err != nil {
-		return err
+		return fiber.NewError(fiber.StatusBadRequest, "invalid payload")
 	}
 
-	eventType := payload["event_type"].(string)
-
-	if eventType == "" {
+	eventRaw, ok := payload["event_type"]
+	if !ok {
 		return fiber.NewError(fiber.StatusBadRequest, "event_type is required")
 	}
 
-	ctx.Send([]byte("Notification triggered successfully"))
+	eventType, ok := eventRaw.(string)
+	if !ok || eventType == "" {
+		return fiber.NewError(fiber.StatusBadRequest, "event_type must be a string")
+	}
 
-	return a.api.TriggerNotification(ctx.Context(), eventType, payload)
+	if err := a.api.TriggerNotification(ctx.Context(), eventType, payload); err != nil {
+		return err
+	}
+
+	return ctx.Send([]byte("Notification triggered successfully"))
 }
