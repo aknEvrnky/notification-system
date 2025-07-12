@@ -19,5 +19,7 @@ func (a *Adapter) TriggerNotificationHandler(ctx *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, "event_type is required")
 	}
 
+	ctx.Send([]byte("Notification triggered successfully"))
+
 	return a.api.TriggerNotification(ctx.Context(), eventType, payload)
 }

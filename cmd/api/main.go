@@ -11,6 +11,7 @@ import (
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"os"
 	"os/signal"
 	"syscall"
@@ -38,7 +39,9 @@ func main() {
 	}
 
 	// create db instance
-	db, err := gorm.Open(mysql.Open(cfg.Dsn), &gorm.Config{})
+	db, err := gorm.Open(mysql.Open(cfg.Dsn), &gorm.Config{
+		Logger: logger.Default.LogMode(logger.Silent),
+	})
 
 	if err != nil {
 		zap.L().Fatal("Failed to connect to database", zap.Error(err))
