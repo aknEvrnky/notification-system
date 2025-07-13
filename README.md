@@ -48,6 +48,16 @@ Domain modelleri (`domain` paketi) yalnizca gerekli alanlari barindirir ve dis k
 3. HTTP servisi varsayilan olarak Fiber uzerinde belirttiginiz portta calisir ve `/api/notifications/trigger` rotasi ile bildirim tetikler.
 4. Kullanici islemleri icin `/api/users` (POST), `/api/users/:id` (PUT, DELETE) rotalari kullanilabilir.
 
+## Docker ile Çalıştırma
+
+Projenin tum bagimliliklarini Docker uzerinden calistirmak icin asagidaki komutu kullanabilirsiniz. Bu komut MySQL, MailPit ve uygulamayi bir arada baslatir:
+
+```bash
+docker compose up --build
+```
+
+Uygulama `localhost:4000` uzerinden erisilebilir. MailPit arayuzune `localhost:8025` adresinden ulasabilirsiniz.
+
 ## Sonuc
 
 Bu proje, hexagonal mimariyi kullanarak sade ama genisletilebilir bir bildirim altyapisi sunar. Port ve adapter yapisi sayesinde kodun test edilebilirligi artar, dis bagimliliklarin degismesi kolaylasir ve gelisime acik bir temel olusur.
