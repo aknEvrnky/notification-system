@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-type user struct {
+type User struct {
 	gorm.Model
 	ID          string `gorm:"primarykey"`
 	Name        string
@@ -22,6 +22,7 @@ type UserRepository struct {
 }
 
 func NewUserRepository(db *gorm.DB) *UserRepository {
+	db.AutoMigrate(&User{})
 	return &UserRepository{db: db}
 }
 
@@ -29,7 +30,7 @@ func (u *UserRepository) FindById(ctx context.Context, userId string) (domain.Us
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
-	usr := user{ID: userId}
+	usr := User{ID: userId}
 
 	u.db.First(&usr)
 
@@ -53,7 +54,7 @@ func (u *UserRepository) Create(ctx context.Context, usr domain.User) error {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
-	record := user{
+	record := User{
 		ID:          usr.Id,
 		Name:        usr.Name,
 		Email:       usr.Email,
@@ -68,7 +69,7 @@ func (u *UserRepository) Update(ctx context.Context, usr domain.User) error {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
-	record := user{
+	record := User{
 		ID:          usr.Id,
 		Name:        usr.Name,
 		Email:       usr.Email,
@@ -76,12 +77,12 @@ func (u *UserRepository) Update(ctx context.Context, usr domain.User) error {
 		DeviceToken: usr.DeviceToken,
 	}
 
-	return u.db.WithContext(ctx).Model(&user{}).Where("id = ?", usr.Id).Updates(record).Error
+	return u.db.WithContext(ctx).Model(&User{}).Where("id = ?", usr.Id).Updates(record).Error
 }
 
 func (u *UserRepository) Delete(ctx context.Context, userId string) error {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
 
-	return u.db.WithContext(ctx).Where("id = ?", userId).Delete(&user{}).Error
+	return u.db.WithContext(ctx).Where("id = ?", userId).Delete(&User{}).Error
 }
