@@ -1,3 +1,5 @@
+> Youtube'da detaylı olarak anlatmış olduğum yayınım: https://www.youtube.com/watch?v=hIMmfI4drlw
+
 # Notification System
 
 Bu repo, Go ile gelistirilmis basit bir bildirim sistemini icerir. Proje, **hexagonal (ports and adapters)** yaklasimini temel alir ve yeni kanallarin veya veri kaynaklarinin kolayca eklenebilmesi amaciyla moduler bir yapi sunar.
